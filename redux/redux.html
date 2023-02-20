@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.1/redux.min.js" integrity="sha512-1/8Tj23BRrWnKZXeBruk6wTnsMJbi/lJsk9bsRgVwb6j5q39n0A00gFjbCTaDo5l5XrPVv4DZXftrJExhRF/Ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <h1 id="number">0</h1>
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+    <script>
+        //초기값 설정
+        const initialState = {
+            number: 0
+        }
+        //리듀서 함수
+        function reducer(state= initialState, action) {
+            switch(action.type){
+                case "INCREASE":
+                    return {
+                        number: state.number + 1
+                    }
+                case "DECREASE":
+                    return {
+                        number: state.number - 1
+                    }
+                default: 
+                    return state;        
+            }
+        }
+
+        //스토어 생성
+        const store = Redux.createStore(reducer,
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+        //액션 생성 함수  --- 액션 객체를 리턴
+        const increment = () => ({ type: "INCREASE"})  /// 소괄호 쓰는 이유 중괄호 리턴 생략되고 객체인지 알려주려고
+        
+        const decrement = () => ({ type: "DECREASE"})
+       
+        const numberEle = document.querySelector("#number")
+        const btnIn = document.querySelector("#increment")
+        const btnDe = document.querySelector("#decrement")
+        const render = () => {
+            numberEle.innerHTML = store.getState().number
+            console.log("render호출됨")
+        }
+        //스코어 구독
+        store.subscribe(render);
+        console.log(store.getState())  //초기값 객체 나옴
+        //버튼 클릭시 상태값 업데이트 (액션발생 -> dispatch)
+        btnIn.addEventListener("click", () =>{
+            store.dispatch(increment())
+            //store.dispatch({type: "INCREASE"}) 액션함수를 만들어놈 위에랑 기능 똑같음
+        })
+        btnDe.addEventListener("click", () =>{
+            store.dispatch(decrement())
+            //store.dispatch({type: "DECREASE"}) 액션함수를 만들어놈 위에랑 기능 똑같음
+            console.log(store.getState().number)
+        })
+
+    </script>
+</body>
+</html>
